@@ -1,0 +1,161 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // تكوين Tailwind للسمات الداكنة والفاتحة
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              dark: {
+                bg: '#1e293b', // slate-800
+                card: '#334155', // slate-700
+                input: '#475569', // slate-600
+              },
+              light: {
+                bg: '#f8fafc', // slate-50
+                card: '#e2e8f0', // slate-200
+                input: '#f1f5f9', // slate-100
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" />
+    <!-- Custom CSS -->
+    <title>Task Manager</title>
+    <style>
+      body {
+        font-family: 'Tajawal', sans-serif;
+      }
+      .modscren {
+        background-color: #1d4ed8;
+        color: white;
+        border-radius: 8px;
+        padding: 6px 12px;
+        margin: 0 5px;
+      }
+      ul li button {
+        padding: 6px 12px;
+        margin: 0 5px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      
+      /* تخصيص التحول بين السمات */
+      .dark {
+        --bg-color: #1e293b;
+        --text-color: #ffffff;
+        --card-bg: #334155;
+        --input-bg: #475569;
+      }
+      
+      .light {
+        --bg-color: #f8fafc;
+        --text-color: #1e293b;
+        --card-bg: #e2e8f0;
+        --input-bg: #f1f5f9;
+      }
+      
+      /* أسلوب زر التبديل */
+      .theme-toggle {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      }
+      
+      .theme-toggle:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .light .theme-toggle:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body class="dark:bg-slate-800 dark:text-white light:bg-slate-50 light:text-slate-900 min-h-screen flex flex-col px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <!-- زر تبديل السمة -->
+    <button id="theme-toggle" class="theme-toggle">
+      <!-- أيقونة القمر (الوضع الداكن) -->
+      <svg xmlns="http://www.w3.org/2000/svg" id="moon-icon" class="h-6 w-6 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      </svg>
+      <!-- أيقونة الشمس (الوضع الفاتح) -->
+      <svg xmlns="http://www.w3.org/2000/svg" id="sun-icon" class="h-6 w-6 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    </button>
+
+    <!-- Header -->
+    <header class="w-full flex flex-col items-center justify-center pt-6">
+      <div class="flex items-center gap-3">
+        <h1 class="text-2xl font-bold">مهام اليوم</h1>
+        <img src="4995112.png" class="w-9 h-9" />
+      </div>
+      <div class="mt-4">
+        <ul id="ulbtn" class="flex">
+          <li><button class="modscren">المهام اليوم</button></li>
+        </ul>
+      </div>
+    </header>
+    <!-- Main Content -->
+    <main class="flex-grow w-full flex flex-col items-center">
+      <!-- Input Section -->
+      <section class="w-full max-w-3xl p-4">
+        <div class="flex flex-col md:flex-row gap-3">
+          <input id="task-input" type="text" placeholder="أدخل عنوان المهمة"
+            class="flex-1 px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white light:bg-slate-100 light:text-slate-900 focus:outline-none transition-colors duration-300" />
+          <input id="date-input" type="date"
+            class="w-40 px-3 py-2 rounded-md dark:bg-gray-700 dark:text-white light:bg-slate-100 light:text-slate-900 focus:outline-none transition-colors duration-300" />
+          <button id="add-task-btn" onclick="addList()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">إضافة</button>
+        </div>
+      </section>
+      <!-- Filter Buttons Section -->
+      <section class="w-full max-w-3xl mt-4">
+        <div class="dark:bg-slate-700 light:bg-slate-200 p-4 rounded-lg border-t-4 dark:border-white light:border-blue-600 flex justify-center transition-colors duration-300">
+          <ul id="ulListBtn" class="flex">
+            <li><button id="btn-inprogress" class="dark:text-white light:text-slate-800 transition-colors duration-300">مهام قيد تنفيذ</button></li>
+            <li><button id="btn-completed" class="dark:text-white light:text-slate-800 transition-colors duration-300">مهام اكتملت</button></li>
+            <span id="numberList" style="margin-right: 15px;" class="dark:text-white light:text-slate-800 transition-colors duration-300"></span>
+          </ul>
+        </div>
+      </section>
+      <!-- Task List Section -->
+      <section class="w-full max-w-3xl mt-4">
+        <div id="task-list" class="space-y-4"></div>
+        <!-- Empty State -->
+        <div id="empty-state" class="text-center dark:text-gray-400 light:text-gray-500 mt-10 hidden transition-colors duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 mx-auto dark:text-gray-600 light:text-gray-400 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2z" />
+          </svg>
+          <p>لا توجد مهام حالياً</p>
+        </div>
+      </section>
+    </main>
+    <script src = "script.js"></script>
+  </body>
+
